@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.joker.Jokster;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
@@ -55,6 +56,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(final View view) {
-        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, new Jokster().joke(), Toast.LENGTH_SHORT).show();
     }
 }
