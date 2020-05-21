@@ -25,3 +25,6 @@ dependencies {
     implementation 'javax.inject:javax.inject:1'
     implementation 'javax.servlet:servlet-api:2.5'
 }
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
