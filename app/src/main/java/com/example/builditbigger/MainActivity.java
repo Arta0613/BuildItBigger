@@ -1,13 +1,14 @@
 package com.example.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.display.JokeActivity;
 import com.example.joker.Jokster;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(final View view) {
-        Toast.makeText(this, new Jokster().joke(), Toast.LENGTH_SHORT).show();
+        final Intent intent = new Intent(this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_KEY, new Jokster().joke());
+        startActivity(intent);
     }
 }
