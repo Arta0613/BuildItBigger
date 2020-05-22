@@ -2,16 +2,12 @@ package com.example.builditbigger;
 
 import android.app.Application;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
 public class BuildItBiggerApplication extends Application {
+
+    private static final String FLAVOR = BuildConfig.FLAVOR;
+    private static final String FREE = "free";
 
     @Nonnull
     private final AppRepository appRepository = new AppRepository();
@@ -20,11 +16,9 @@ public class BuildItBiggerApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        final List<String> testDevices = new ArrayList<>();
-        testDevices.add(AdRequest.DEVICE_ID_EMULATOR);
-        MobileAds.setRequestConfiguration(
-                new RequestConfiguration.Builder().setTestDeviceIds(testDevices).build()
-        );
+        if (FLAVOR.equals(FREE)) {
+            new MobileAdsConfiguration().init();
+        }
     }
 
     @Nonnull

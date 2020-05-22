@@ -26,12 +26,14 @@ public class MainActivityFragment extends Fragment {
     ) {
         final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        final AdView mAdView = rootView.findViewById(R.id.adView);
-        // Create an ad request. Check logcat output for the hashed device ID to
-        // get test ads on a physical device.
-        final AdRequest adRequest = new AdRequest.Builder().build();
+        final AdView adView = rootView.findViewById(R.id.adView);
+        if (adView != null) {
+            // Create an ad request. Check logcat output for the hashed device ID to
+            // get test ads on a physical device.
+            final AdRequest adRequest = new AdRequest.Builder().build();
 
-        mAdView.loadAd(adRequest);
+            adView.loadAd(adRequest);
+        }
 
         final MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.init(getMyApi());
