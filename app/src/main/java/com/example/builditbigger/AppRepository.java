@@ -1,5 +1,7 @@
 package com.example.builditbigger;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import com.example.builditbigger.backend.myApi.MyApi;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 
@@ -17,6 +19,10 @@ public class AppRepository {
     @Nonnull
     private final MyApi myApiService;
 
+    @Nonnull
+    private final CountingIdlingResource countingIdlingResource =
+            new CountingIdlingResource("idling_resource");
+
     public AppRepository() {
         myApiService = createMyApiBuilder().build();
     }
@@ -24,6 +30,11 @@ public class AppRepository {
     @Nonnull
     public final MyApi getMyApiService() {
         return myApiService;
+    }
+
+    @Nonnull
+    public final CountingIdlingResource getCountingIdlingResource() {
+        return countingIdlingResource;
     }
 
     @Nonnull

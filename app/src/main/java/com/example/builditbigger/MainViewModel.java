@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.example.builditbigger.backend.myApi.MyApi;
 
@@ -19,11 +20,15 @@ public class MainViewModel extends ViewModel {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final SingleLiveEvent<String> jokeReceivedEvent = new SingleLiveEvent<>();
-    public final MutableLiveData<Boolean> loadingIndicator = new MutableLiveData<>(false);
-    private MyApi myApi;
 
-    public void init(@Nonnull final MyApi myApi) {
+    private MyApi myApi;
+    private CountingIdlingResource idlingResource;
+
+    public final MutableLiveData<Boolean> loadingIndicator = new MutableLiveData<>(false);
+
+    public void init(@Nonnull final MyApi myApi, @Nonnull final CountingIdlingResource idlingResource) {
         this.myApi = myApi;
+        this.idlingResource = idlingResource;
     }
 
     @Override
@@ -34,6 +39,7 @@ public class MainViewModel extends ViewModel {
 
     public void loadJoke() {
         loadingIndicator.setValue(true);
+        idlingResource.increment();
         disposable.add(Single.fromCallable(() -> myApi.getJoke().execute().getData())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -53,12 +59,14 @@ public class MainViewModel extends ViewModel {
             public void onSuccess(@Nonnull final String joke) {
                 jokeReceivedEvent.setValue(joke);
                 loadingIndicator.setValue(false);
+                idlingResource.decrement();
             }
 
             @Override
             public void onError(@Nonnull final Throwable e) {
                 Log.e(MainViewModel.class.getSimpleName(), "onError: ", e);
                 loadingIndicator.setValue(false);
+                idlingResource.decrement();
             }
         };
     }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 import com.example.builditbigger.backend.myApi.MyApi;
 import com.example.builditbigger.databinding.FragmentMainBinding;
@@ -42,18 +43,26 @@ public class MainActivityFragment extends Fragment {
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setViewModel(mainViewModel);
 
-        mainViewModel.init(getMyApi());
+        mainViewModel.init(getMyApi(), getIdlingResource());
 
         return binding.getRoot();
     }
 
     @Nonnull
+    private CountingIdlingResource getIdlingResource() {
+        return getAppRepository().getCountingIdlingResource();
+    }
+
+    @Nonnull
     private MyApi getMyApi() {
+        return getAppRepository().getMyApiService();
+    }
+
+    @Nonnull
+    private AppRepository getAppRepository() {
         final BuildItBiggerApplication application =
                 ((BuildItBiggerApplication) requireActivity().getApplication());
-        final AppRepository appRepository = application.getAppRepository();
 
-
-        return appRepository.getMyApiService();
+        return application.getAppRepository();
     }
 }
