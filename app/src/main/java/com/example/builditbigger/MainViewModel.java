@@ -2,6 +2,7 @@ package com.example.builditbigger;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.builditbigger.backend.myApi.MyApi;
@@ -18,6 +19,7 @@ public class MainViewModel extends ViewModel {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final SingleLiveEvent<String> jokeReceivedEvent = new SingleLiveEvent<>();
+    public final MutableLiveData<Boolean> loadingIndicator = new MutableLiveData<>(false);
     private MyApi myApi;
 
     public void init(@Nonnull final MyApi myApi) {
@@ -31,6 +33,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void loadJoke() {
+        loadingIndicator.setValue(true);
         disposable.add(Single.fromCallable(() -> myApi.getJoke().execute().getData())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,11 +52,13 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onSuccess(@Nonnull final String joke) {
                 jokeReceivedEvent.setValue(joke);
+                loadingIndicator.setValue(false);
             }
 
             @Override
             public void onError(@Nonnull final Throwable e) {
                 Log.e(MainViewModel.class.getSimpleName(), "onError: ", e);
+                loadingIndicator.setValue(false);
             }
         };
     }

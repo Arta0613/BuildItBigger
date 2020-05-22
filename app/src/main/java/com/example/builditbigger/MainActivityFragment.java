@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.builditbigger.backend.myApi.MyApi;
+import com.example.builditbigger.databinding.FragmentMainBinding;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -24,9 +26,9 @@ public class MainActivityFragment extends Fragment {
             @Nullable final ViewGroup container,
             @Nullable final Bundle savedInstanceState
     ) {
-        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        final FragmentMainBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false);
 
-        final AdView adView = rootView.findViewById(R.id.adView);
+        final AdView adView = binding.getRoot().findViewById(R.id.adView);
         if (adView != null) {
             // Create an ad request. Check logcat output for the hashed device ID to
             // get test ads on a physical device.
@@ -36,9 +38,13 @@ public class MainActivityFragment extends Fragment {
         }
 
         final MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+
+        binding.setLifecycleOwner(getViewLifecycleOwner());
+        binding.setViewModel(mainViewModel);
+
         mainViewModel.init(getMyApi());
 
-        return rootView;
+        return binding.getRoot();
     }
 
     @Nonnull
