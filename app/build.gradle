@@ -34,6 +34,19 @@ android {
         }
     }
 
+    flavorDimensions "model"
+    productFlavors {
+        free {
+            applicationIdSuffix ".free"
+            versionNameSuffix "-free"
+        }
+
+        paid {
+            applicationIdSuffix ".paid"
+            versionNameSuffix "-paid"
+        }
+    }
+
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
