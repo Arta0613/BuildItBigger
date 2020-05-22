@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.builditbigger.backend.myApi.MyApi;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -31,6 +33,19 @@ public class MainActivityFragment extends Fragment {
 
         mAdView.loadAd(adRequest);
 
+        final MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.init(getMyApi());
+
         return rootView;
+    }
+
+    @Nonnull
+    private MyApi getMyApi() {
+        final BuildItBiggerApplication application =
+                ((BuildItBiggerApplication) requireActivity().getApplication());
+        final AppRepository appRepository = application.getAppRepository();
+
+
+        return appRepository.getMyApiService();
     }
 }

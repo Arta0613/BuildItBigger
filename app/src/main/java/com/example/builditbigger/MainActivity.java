@@ -7,31 +7,24 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.display.JokeActivity;
-import com.example.joker.Jokster;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainViewModel mainViewModel;
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final List<String> testDevices = new ArrayList<>();
-        testDevices.add(AdRequest.DEVICE_ID_EMULATOR);
-        MobileAds.setRequestConfiguration(
-                new RequestConfiguration.Builder().setTestDeviceIds(testDevices).build()
-        );
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.getJokeReceivedEvent().observe(this, this::handleJoke);
     }
 
     @Override
@@ -57,8 +50,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(final View view) {
+        mainViewModel.loadJoke();
+    }
+
+    private void handleJoke(@Nonnull final String joke) {
         final Intent intent = new Intent(this, JokeActivity.class);
-        intent.putExtra(JokeActivity.JOKE_KEY, new Jokster().joke());
+        intent.putExtra(JokeActivity.JOKE_KEY, joke);
         startActivity(intent);
     }
 }
