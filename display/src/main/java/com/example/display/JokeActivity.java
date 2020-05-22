@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 
 public class JokeActivity extends AppCompatActivity {
 
@@ -20,7 +21,7 @@ public class JokeActivity extends AppCompatActivity {
         final String joke = intent.getStringExtra(JokeActivity.JOKE_KEY);
 
         if (joke != null && joke.length() != 0) {
-            Toast.makeText(this, joke, Toast.LENGTH_SHORT).show();
+            ((AppCompatTextView) findViewById(R.id.joke_text)).setText(joke);
         }
     }
 }

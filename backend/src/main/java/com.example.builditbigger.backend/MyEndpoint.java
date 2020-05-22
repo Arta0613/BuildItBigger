@@ -1,5 +1,6 @@
 package com.example.builditbigger.backend;
 
+import com.example.joker.Joker;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -24,6 +25,16 @@ public class MyEndpoint {
     public final MyBean sayHi(@Named("name") final String name) {
         final MyBean response = new MyBean();
         response.setData("Hi, " + name);
+
+        return response;
+    }
+
+    /** A simple endpoint method that returns a Joke wrapped in a Bean */
+    @Nonnull
+    @ApiMethod(name = "getJoke")
+    public final MyBean getJoke() {
+        final MyBean response = new MyBean();
+        response.setData(new Joker().joke());
 
         return response;
     }
